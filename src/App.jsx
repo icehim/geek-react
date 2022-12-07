@@ -3,9 +3,10 @@ import './App.scss';
 //BrowserRouter(history),HashRouter(hash模式)
 import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 //导入页面组件
-import NotFound from "./pages/404";
-import Login from "./pages/login";
-import Layout from "./pages/layout";
+// import Layout from "./pages/layout";
+import Layout from "@/pages/layout";
+import Login from "@/pages/login";
+import NotFound from "@/pages/404";
 
 function App() {
     return (
