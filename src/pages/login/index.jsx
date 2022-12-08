@@ -1,20 +1,22 @@
 import {Button, Card, Checkbox, Form, Input} from "antd";
 import logo from '@/assets/logo.png'
 import './index.scss'
+import {useDispatch} from "react-redux";
+import {loginAction} from "@/store/actions/login";
 
 //Input函数组件，通过静态属性，存储了另外一个函数组件Password
 const {Password} = Input
 
 function Login() {
-
+    const dispatch = useDispatch()
     /**
      *
      * @param values 表的所有项的值
      */
     const onFinish = (values) => {
         //表单校验通过之后会执行
-        console.log('Success:', values);
         //发请求登录
+        dispatch(loginAction(values))
     };
 
     //函数校验
