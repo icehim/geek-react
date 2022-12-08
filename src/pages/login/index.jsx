@@ -1,22 +1,34 @@
-import {Button, Card, Checkbox, Form, Input} from "antd";
+import {Button, Card, Checkbox, Form, Input, message} from "antd";
 import logo from '@/assets/logo.png'
 import './index.scss'
 import {useDispatch} from "react-redux";
 import {loginAction} from "@/store/actions/login";
+import {useHistory} from "react-router-dom";
 
 //Input函数组件，通过静态属性，存储了另外一个函数组件Password
 const {Password} = Input
 
 function Login() {
     const dispatch = useDispatch()
+    const history = useHistory()
     /**
      *
      * @param values 表的所有项的值
      */
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         //表单校验通过之后会执行
         //发请求登录
-        dispatch(loginAction(values))
+        try {
+            await dispatch(loginAction(values))
+            message.success('登录成功')
+            //跳转首页
+            history.push('/home')
+
+        } catch (error) {
+            // console.log(error)
+            console.dir(error)
+            message.error(error.response.data.message)
+        }
     };
 
     //函数校验
