@@ -2,7 +2,7 @@ import {setToken} from "@/utils/auth";
 import request from "@/utils/request";
 
 export const loginAction = (values) => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         /*
         * 登录action:
         * 1.调用后台接口发请求，获取token

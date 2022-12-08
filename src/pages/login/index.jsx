@@ -3,7 +3,7 @@ import logo from '@/assets/logo.png'
 import './index.scss'
 import {useDispatch} from "react-redux";
 import {loginAction} from "@/store/actions/login";
-import {useHistory} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 
 //Input函数组件，通过静态属性，存储了另外一个函数组件Password
 const {Password} = Input
@@ -11,6 +11,9 @@ const {Password} = Input
 function Login() {
     const dispatch = useDispatch()
     const history = useHistory()
+    //获取参数
+    const location = useLocation()
+    console.log(location)
     /**
      *
      * @param values 表的所有项的值
@@ -22,7 +25,7 @@ function Login() {
             await dispatch(loginAction(values))
             message.success('登录成功')
             //跳转首页
-            history.push('/home')
+            history.push(location.state?.from || '/home')
 
         } catch (error) {
             // console.log(error)
