@@ -1,5 +1,7 @@
 //只存储token
-const initialState = localStorage.getItem('geek-token') || ''
+import {getToken} from "@/utils/auth";
+
+const initialState = getToken() || ''
 
 export const reducerLogin = (state = initialState, action) => {
     if (action.type === 'login/token') {

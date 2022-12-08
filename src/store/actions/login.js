@@ -1,4 +1,5 @@
 import axios from "axios";
+import {setToken} from "@/utils/auth";
 
 export const loginAction = (values) => {
     return async (dispatch, getState) => {
@@ -10,7 +11,8 @@ export const loginAction = (values) => {
         const {data: {data: {token}}} = await axios.post('http://geek.itheima.net/v1_0/authorizations', values)
         console.log(token)
         dispatch({type: 'login/token', token})
-        localStorage.setItem('geek-token', token)
+        // localStorage.setItem('geek-token', token)
+        setToken(token)
 
     }
 
