@@ -2,13 +2,13 @@ import {Button, Card, Checkbox, Form, Input} from "antd";
 import logo from '@/assets/logo.png'
 import './index.scss'
 
+//Input函数组件，通过静态属性，存储了另外一个函数组件Password
+const {Password} = Input
+
 function Login() {
 
     const onFinish = (values) => {
         console.log('Success:', values);
-    };
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
     };
 
     return (
@@ -34,7 +34,8 @@ function Login() {
                         name="password"
                         rules={[{required: true, message: '请输入密码！'}]}
                     >
-                        <Input.Password size='large'/>
+                        {/*<Input.Password size='large'/>*/}
+                        <Password size='large'/>
                     </Form.Item>
 
                     <Form.Item name="remember" valuePropName="checked">
@@ -42,6 +43,7 @@ function Login() {
                     </Form.Item>
 
                     <Form.Item>
+                        {/*注意:表单的button组件上一定要添加htmlType="submit" */}
                         <Button type="primary" size='large' block htmlType="submit">
                             登录
                         </Button>
