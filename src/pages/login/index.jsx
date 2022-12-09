@@ -25,10 +25,7 @@ function Login() {
             message.success('登录成功')
             //跳转首页
             history.push(location.state?.from || '/home')
-
         } catch (error) {
-            // console.log(error)
-            console.dir(error)
             message.error(error.response.data.message)
         }
     };

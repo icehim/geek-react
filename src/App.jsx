@@ -1,7 +1,7 @@
 import './App.scss';
 
 //BrowserRouter(history),HashRouter(hash模式)
-import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
+import {Router, Route, Switch, Redirect} from "react-router-dom";
 //导入页面组件
 // import Layout from "./pages/layout";
 import Layout from "@/pages/layout";
@@ -12,10 +12,11 @@ import Test from "@/pages/test";
 
 //导入鉴权组件
 import AuthRoute from "@/components/auth";
+import customHistory from "@/utils/history";
 
 function App() {
     return (
-        <BrowserRouter>
+        <Router history={customHistory}>
             <div className="app">
                 {
                     /*配置路由规则=》一级路由
@@ -46,7 +47,7 @@ function App() {
                     <Route component={NotFound}/>
                 </Switch>
             </div>
-        </BrowserRouter>
+        </Router>
     );
 }
 

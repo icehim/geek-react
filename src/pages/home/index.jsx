@@ -1,9 +1,8 @@
+import sty from './index.module.scss'
+
 function Home() {
     return (
-        <div>
-            <h1>
-                Home
-            </h1>
+        <div className={sty.root}>
         </div>
     );
 }
