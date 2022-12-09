@@ -17,7 +17,11 @@ function App() {
     return (
         <BrowserRouter>
             <div className="app">
-                {/*配置路由规则*/}
+                {
+                    /*配置路由规则=》一级路由
+                    * 说明:配置子路由，去对应的父路由组件中配置
+                    * */
+                }
                 <Switch>
                     <Redirect exact from='/' to='/home'/>
                     {/*<Route path='/home' component={Layout}/>*/}
