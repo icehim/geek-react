@@ -7,6 +7,8 @@ import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 import Layout from "@/pages/layout";
 import Login from "@/pages/login";
 import NotFound from "@/pages/404";
+//导入测试页面
+import Test from "@/pages/test";
 
 //导入鉴权组件
 import AuthRoute from "@/components/auth";
@@ -35,6 +37,7 @@ function App() {
                     {/*    return <Layout/>*/}
                     {/*}}/>*/}
                     <Route path='/login' component={Login}/>
+                    <Route path='/test' component={Test}/>
                     {/*配置404=>必须放到最后*/}
                     <Route component={NotFound}/>
                 </Switch>
