@@ -13,7 +13,6 @@ function Login() {
     const history = useHistory()
     //获取参数
     const location = useLocation()
-    console.log(location)
     /**
      *
      * @param values 表的所有项的值

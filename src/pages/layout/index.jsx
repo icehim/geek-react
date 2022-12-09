@@ -6,10 +6,11 @@ import styles from './index.module.scss'
 import Home from "@/pages/home";
 import Article from "@/pages/article";
 import Publish from "@/pages/publish";
-import {Route, Link, useLocation} from "react-router-dom";
+import {Route, Link, useLocation, useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {getUserAction} from "@/store/actions/user";
+import {logoutAction} from "@/store/actions/login";
 
 //结构Layout组件上的静态属性=》函数组件
 const {Header, Sider} = Layout
@@ -33,6 +34,18 @@ const Layouts = () => {
         dispatch(getUserAction())
     }, [dispatch])
 
+    //3.退出登录
+    const history = useHistory()
+    const onLogout = () => {
+        console.log('执行退出')
+        /*
+        * 1.清除redux状态数据和本地token
+        * 2.跳回登录页
+        * */
+        dispatch(logoutAction())
+        history.replace('/login')
+    }
+
     return (
         <Layout className={styles.root}>
             {/*顶部通栏*/}
@@ -42,9 +55,11 @@ const Layouts = () => {
                 {/* 右侧：用户信息 */}
                 <div className="user-info">
                     <span className="user-name">{user.name}</span>
-                    <span className="user-logout"><Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
-                    <LogoutOutlined/> 退出</Popconfirm>
-                </span>
+                    <span className="user-logout">
+                        <Popconfirm title="是否确认退出？" onConfirm={onLogout} okText="退出" cancelText="取消">
+                            <LogoutOutlined/> 退出
+                        </Popconfirm>
+                    </span>
                 </div>
             </Header>
             {/*左侧:菜单*/}
