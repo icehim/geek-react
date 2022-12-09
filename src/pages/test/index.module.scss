@@ -1,0 +1,29 @@
+.red {
+  color: red;
+}
+
+.borders {
+  border: 10px solid blue;
+}
+
+// 不建议定义：font-yellow
+.fontBlue {
+  color: yellowgreen;
+}
+
+//全局类名(不会进行css modules处理)
+//写法1
+:global(.green) {
+  color: green;
+}
+
+//写法2
+:global {
+  .pink {
+    color: pink;
+  }
+
+  .fonts {
+    font-size: 30px;
+  }
+}
