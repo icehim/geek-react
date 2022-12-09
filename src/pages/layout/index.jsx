@@ -1,13 +1,13 @@
 import {Layout, Menu, Popconfirm} from 'antd'
 import {HomeOutlined, DiffOutlined, EditOutlined, LogoutOutlined} from '@ant-design/icons'
 // 导入组件样式
-import './index.scss'
+import styles from './index.module.scss'
 //结构Layout组件上的静态属性=》函数组件
 const {Header, Sider} = Layout
 
 const Layouts = () => {
     return (
-        <Layout>
+        <Layout className={styles.root}>
             {/*顶部通栏*/}
             <Header className="header">
                 {/*左侧:系统logo*/}
