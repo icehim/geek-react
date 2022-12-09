@@ -20,7 +20,7 @@ const Layouts = () => {
 
     const location = useLocation()
     //当选选中的菜单
-    const currSelected = location.pathname
+    const currSelected = location.pathname.startsWith('/home/publish') ? '/home/publish' : location.pathname
     return (
         <Layout className={styles.root}>
             {/*顶部通栏*/}
@@ -60,7 +60,8 @@ const Layouts = () => {
                     {/*配置子路由*/}
                     <Route exact path='/home' component={Home}/>
                     <Route path='/home/article' component={Article}/>
-                    <Route path='/home/publish' component={Publish}/>
+                    {/*1.发布文章(不带ID参数) 2.修改文章(带ID参数)=》:id?   '?'：意思是参数是可选的*/}
+                    <Route path='/home/publish/:id?' component={Publish}/>
                 </Layout>
             </Layout>
         </Layout>
