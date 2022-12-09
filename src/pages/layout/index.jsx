@@ -7,20 +7,32 @@ import Home from "@/pages/home";
 import Article from "@/pages/article";
 import Publish from "@/pages/publish";
 import {Route, Link, useLocation} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {getUserAction} from "@/store/actions/user";
 
 //结构Layout组件上的静态属性=》函数组件
 const {Header, Sider} = Layout
 
 const Layouts = () => {
     /*
-    * 实现菜单高亮:
-    * 1.把菜单绑定的key值，变为对应菜单的路由path地址
-    * 2.定义当前访问页面的path地址变量=>当前菜单需要高亮的路由地址
+    * 1.实现菜单高亮:
+    *   1>.把菜单绑定的key值，变为对应菜单的路由path地址
+    *   2>.定义当前访问页面的path地址变量=>当前菜单需要高亮的路由地址
     * */
 
     const location = useLocation()
     //当选选中的菜单
     const currSelected = location.pathname.startsWith('/home/publish') ? '/home/publish' : location.pathname
+    //2.获取登录人的信息存到redux
+    const dispatch = useDispatch()
+
+    const user = useSelector((state) => state.user)
+
+    useEffect(() => {
+        dispatch(getUserAction())
+    }, [dispatch])
+
     return (
         <Layout className={styles.root}>
             {/*顶部通栏*/}
@@ -29,7 +41,7 @@ const Layouts = () => {
                 <div className="logo"/>
                 {/* 右侧：用户信息 */}
                 <div className="user-info">
-                    <span className="user-name">user.name</span>
+                    <span className="user-name">{user.name}</span>
                     <span className="user-logout"><Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
                     <LogoutOutlined/> 退出</Popconfirm>
                 </span>
