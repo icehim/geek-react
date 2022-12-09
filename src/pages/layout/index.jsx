@@ -6,12 +6,21 @@ import styles from './index.module.scss'
 import Home from "@/pages/home";
 import Article from "@/pages/article";
 import Publish from "@/pages/publish";
-import {Route, Link} from "react-router-dom";
+import {Route, Link, useLocation} from "react-router-dom";
 
 //结构Layout组件上的静态属性=》函数组件
 const {Header, Sider} = Layout
 
 const Layouts = () => {
+    /*
+    * 实现菜单高亮:
+    * 1.把菜单绑定的key值，变为对应菜单的路由path地址
+    * 2.定义当前访问页面的path地址变量=>当前菜单需要高亮的路由地址
+    * */
+
+    const location = useLocation()
+    //当选选中的菜单
+    const currSelected = location.pathname
     return (
         <Layout className={styles.root}>
             {/*顶部通栏*/}
@@ -32,16 +41,16 @@ const Layouts = () => {
                     <Menu
                         mode="inline"
                         theme="dark"
-                        defaultSelectedKeys={['1']}
+                        defaultSelectedKeys={[currSelected]}
                         style={{height: '100%', borderRight: 0}}
                     >
-                        <Menu.Item icon={<HomeOutlined/>} key="1">
+                        <Menu.Item icon={<HomeOutlined/>} key="/home">
                             <Link to='/home'>数据概览</Link>
                         </Menu.Item>
-                        <Menu.Item icon={<DiffOutlined/>} key="2">
+                        <Menu.Item icon={<DiffOutlined/>} key="/home/article">
                             <Link to='/home/article'>内容管理</Link>
                         </Menu.Item>
-                        <Menu.Item icon={<EditOutlined/>} key="3">
+                        <Menu.Item icon={<EditOutlined/>} key="/home/publish">
                             <Link to='/home/publish'>发布文章</Link>
                         </Menu.Item>
                     </Menu>
