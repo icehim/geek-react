@@ -120,6 +120,32 @@ function Article() {
     //     }
     // ]
 
+    //3.根据表单选择的条件过滤文章列表
+
+    /**
+     *表单数据
+     * @param status
+     * @param channel_id
+     * @param date
+     */
+    const onFilter = ({status, channel_id, date}) => {
+        console.log(status, channel_id, date)
+        //组装过滤列表需要的参数
+        const params = {channel_id}
+        //排除全部
+        if (status !== -1) {
+            params.status = status
+        }
+        //判断一个值是否是  '' null undefined
+        if (!!date) {
+            //开始时间
+            params.begin_pubdate = date[0].format('YYYY-MM-DD HH:mm:ss')
+            //结束时间
+            params.end_pubdate = date[1].format('YYYY-MM-DD HH:mm:ss')
+        }
+        dispatch(getArticleAction(params))
+    }
+
     return (
         <>
             {/*筛选表单*/}
@@ -134,7 +160,7 @@ function Article() {
                 }
                 style={{marginBottom: 20}}
             >
-                <Form initialValues={{status: -1}}>
+                <Form onFinish={onFilter} initialValues={{status: -1}}>
                     <Form.Item label="状态" name="status">
                         <Radio.Group>
                             <Radio value={-1}>全部</Radio>
