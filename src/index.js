@@ -11,13 +11,16 @@ import App from './App';
 // 集成store
 import {Provider} from "react-redux";
 import store from "@/store";
+import {ConfigProvider} from "antd";
+import 'dayjs/locale/zh-cn';
+import zhCN from 'antd/locale/zh_CN';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
-        <React.StrictMode>
+        <ConfigProvider locale={zhCN}>
             <App/>
-        </React.StrictMode>
+        </ConfigProvider>
     </Provider>
 );
 
