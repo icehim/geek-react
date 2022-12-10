@@ -12,6 +12,13 @@ import img404 from '@/assets/error.png'
 
 const {Option} = Select
 const {RangePicker} = DatePicker
+// 优化文章状态的处理(不变的)=》映射关系
+const articleStatus = {
+    0: {color: 'yellow', text: '草稿'},
+    1: {color: '#ccc', text: '待审核'},
+    2: {color: 'green', text: '审核通过'},
+    3: {color: 'red', text: '审核失败'}
+}
 
 function Article() {
 
@@ -61,7 +68,10 @@ function Article() {
         {
             title: '状态',
             dataIndex: 'status',
-            render: data => <Tag color="green">审核通过</Tag>
+            render: status => {
+                //根据status文章状态=》articleStatus[status]获取映射关系对应的状态
+                return <Tag color={articleStatus[status].color}>{articleStatus[status].text}</Tag>
+            }
         },
         {
             title: '发布时间',
