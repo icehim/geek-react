@@ -2,7 +2,9 @@ import {Link} from 'react-router-dom'
 import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Space, Table, Tag} from 'antd'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {getChannelAction} from "@/store/actions/article";
+import {getArticleAction, getChannelAction} from "@/store/actions/article";
+import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import img404 from '@/assets/error.png'
 // import 'moment/locale/zh-cn'
 // import dayjs from 'dayjs'
 // import locale from "antd/es/date-picker/locale/zh_CN";
@@ -18,88 +20,95 @@ function Article() {
     const {channels} = useSelector(state => state.article)
     useEffect(() => {
         dispatch(getChannelAction())
+        //2.获取文章列表数据=》默认第一次调用，不需要顾虑参数
+        dispatch(getArticleAction({}))
     }, [dispatch])
 
 
     //table列表每列数据定义
+    // const columns = [
+    //     {
+    //         title: '姓名',//列的标题
+    //         dataIndex: 'name',//对应data数据源中的属性名（唯一）
+    //         // 自定义列的内容
+    //         /**
+    //          *
+    //          * @param col   当前列的值
+    //          * @param row   当前行的数据
+    //          * @param i 行的索引
+    //          */
+    //         render: (col, row, i) => {
+    //             // console.log(col, row, i)
+    //             return <span style={{color: 'red'}}>{col}</span>
+    //         }
+    //     },
+    // ];
+    // table列表数据源(从后台获取)
+
     const columns = [
         {
-            title: '姓名',//列的标题
-            dataIndex: 'name',//对应data数据源中的属性名（唯一）
-            // 自定义列的内容
-            /**
-             *
-             * @param col   当前列的值
-             * @param row   当前行的数据
-             * @param i 行的索引
-             */
-            render: (col, row, i) => {
-                // console.log(col, row, i)
-                return <span style={{color: 'red'}}>{col}</span>
+            title: '封面',
+            dataIndex: 'cover',
+            render: cover => {
+                return <img src={cover || img404} width={200} height={150} alt=""/>
             }
         },
         {
-            title: 'Age',
-            dataIndex: 'age',
+            title: '标题',
+            dataIndex: 'title',
+            width: 220
         },
         {
-            title: 'Address',
-            dataIndex: 'address',
+            title: '状态',
+            dataIndex: 'status',
+            render: data => <Tag color="green">审核通过</Tag>
         },
         {
-            title: 'Tags',
-            dataIndex: 'tags',
-            render: (_, {tags}) => (
-                <>
-                    {tags.map((tag) => {
-                        let color = tag.length > 5 ? 'geekblue' : 'green';
-                        if (tag === 'loser') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag}>
-                                {tag.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </>
-            ),
+            title: '发布时间',
+            dataIndex: 'pubdate'
         },
         {
-            title: 'Action',
-            key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <a>Invite {record.name}</a>
-                    <a>Delete</a>
-                </Space>
-            ),
+            title: '阅读数',
+            dataIndex: 'read_count'
         },
-    ];
-    // table列表数据源(从后台获取)
+        {
+            title: '评论数',
+            dataIndex: 'comment_count'
+        },
+        {
+            title: '点赞数',
+            dataIndex: 'like_count'
+        },
+        {
+            title: '操作',
+            render: data => {
+                return (
+                    <Space size="middle">
+                        <Button type="primary" shape="circle" icon={<EditOutlined/>}/>
+                        <Button
+                            type="primary"
+                            danger
+                            shape="circle"
+                            icon={<DeleteOutlined/>}
+                        />
+                    </Space>
+                )
+            }
+        }
+    ]
+    //table列表数据源(从后台获取)
     const data = [
         {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
+            id: '8218',
+            comment_count: 0,
+            cover: 'http://geek.itheima.net/resources/images/15.jpg',
+            like_count: 0,
+            pubdate: '2019-03-11 09:00:00',
+            read_count: 2,
+            status: 2,
+            title: 'webview离线化加载h5资源解决方案'
+        }
+    ]
 
     return (
         <>
@@ -152,7 +161,7 @@ function Article() {
                 </Form>
             </Card>
             <Card title={`根据筛选条件获取到0条数据：`}>
-                <Table columns={columns} dataSource={data}/>
+                <Table rowKey='id' columns={columns} dataSource={data}/>
             </Card>
         </>
     );
