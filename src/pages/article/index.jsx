@@ -1,5 +1,8 @@
 import {Link} from 'react-router-dom'
 import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Space, Table, Tag} from 'antd'
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {getChannelAction} from "@/store/actions/article";
 // import 'moment/locale/zh-cn'
 // import dayjs from 'dayjs'
 // import locale from "antd/es/date-picker/locale/zh_CN";
@@ -9,6 +12,14 @@ const {Option} = Select
 const {RangePicker} = DatePicker
 
 function Article() {
+
+    //1.获取文章频道列表数据
+    const dispatch = useDispatch()
+    const {channels} = useSelector(state => state.article)
+    useEffect(() => {
+        dispatch(getChannelAction())
+    }, [dispatch])
+
 
     //table列表每列数据定义
     const columns = [
@@ -118,11 +129,14 @@ function Article() {
                     <Form.Item label="频道" name="channel_id">
                         <Select
                             placeholder="请选择文章频道"
-                            defaultValue="lucy"
-                            style={{width: 120}}
+                            style={{width: 140}}
                         >
-                            <Option value="jack">Jack</Option>
-                            <Option value="lucy">Lucy</Option>
+                            {/*value属性是选择的时候存到表单中的值*/}
+                            {
+                                channels.map(item => (
+                                    <Option key={item.id} value={item.id}>{item.name}</Option>
+                                ))
+                            }
                         </Select>
                     </Form.Item>
 
