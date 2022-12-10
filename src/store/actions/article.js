@@ -14,7 +14,11 @@ export const getArticleAction = (payload) => {
         const datas = {
             page,//当前页面
             pageSIze: per_page,//每页多少条数据
-            list: results,// 列表
+            list: results.map(item => ({
+                ...item,
+                //处理cover字段为图片地址，作为列表的封面图
+                cover: item.cover.images[0]
+            })),// 列表
             total: total_count//文章数据的总数
         }
         dispatch({type: 'article/list', datas})

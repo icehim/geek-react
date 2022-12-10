@@ -17,7 +17,7 @@ function Article() {
 
     //1.获取文章频道列表数据
     const dispatch = useDispatch()
-    const {channels} = useSelector(state => state.article)
+    const {channels, list, total} = useSelector(state => state.article)
     useEffect(() => {
         dispatch(getChannelAction())
         //2.获取文章列表数据=》默认第一次调用，不需要顾虑参数
@@ -97,18 +97,18 @@ function Article() {
         }
     ]
     //table列表数据源(从后台获取)
-    const data = [
-        {
-            id: '8218',
-            comment_count: 0,
-            cover: 'http://geek.itheima.net/resources/images/15.jpg',
-            like_count: 0,
-            pubdate: '2019-03-11 09:00:00',
-            read_count: 2,
-            status: 2,
-            title: 'webview离线化加载h5资源解决方案'
-        }
-    ]
+    // const data = [
+    //     {
+    //         id: '8218',
+    //         comment_count: 0,
+    //         cover: 'http://geek.itheima.net/resources/images/15.jpg',
+    //         like_count: 0,
+    //         pubdate: '2019-03-11 09:00:00',
+    //         read_count: 2,
+    //         status: 2,
+    //         title: 'webview离线化加载h5资源解决方案'
+    //     }
+    // ]
 
     return (
         <>
@@ -160,8 +160,8 @@ function Article() {
                     </Form.Item>
                 </Form>
             </Card>
-            <Card title={`根据筛选条件获取到0条数据：`}>
-                <Table rowKey='id' columns={columns} dataSource={data}/>
+            <Card title={`根据筛选条件获取到${total}条数据：`}>
+                <Table rowKey='id' columns={columns} dataSource={list}/>
             </Card>
         </>
     );
