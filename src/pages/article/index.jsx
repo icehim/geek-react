@@ -24,7 +24,7 @@ function Article() {
 
     //1.获取文章频道列表数据
     const dispatch = useDispatch()
-    const {channels, list, total} = useSelector(state => state.article)
+    const {channels, list, total, page, pageSize} = useSelector(state => state.article)
     useEffect(() => {
         dispatch(getChannelAction())
         //2.获取文章列表数据=》默认第一次调用，不需要顾虑参数
@@ -146,6 +146,20 @@ function Article() {
         dispatch(getArticleAction(params))
     }
 
+    //文章列表切换分页事件
+    /**
+     *
+     * @param page  最新页码
+     * @param pageSize  最新每页条数
+     */
+    const onPageChange = (page, pageSize) => {
+        const params = {
+            page,
+            per_page: pageSize
+        }
+        //根据最新分页数据刷新列表
+        dispatch(getArticleAction(params))
+    }
     return (
         <>
             {/*筛选表单*/}
@@ -197,7 +211,19 @@ function Article() {
                 </Form>
             </Card>
             <Card title={`根据筛选条件获取到${total}条数据：`}>
-                <Table rowKey='id' columns={columns} dataSource={list}/>
+                <Table
+                    rowKey='id'
+                    columns={columns}
+                    dataSource={list}
+                    pagination={{
+                        position: ['bottomCenter'],
+                        current: page,//当前第几页
+                        pageSize,//每页多少条数据
+                        total,//总数
+                        showSizeChanger: true,//切换页容量
+                        onChange: onPageChange//页码或pageSize改变的回调
+                    }}>
+                </Table>
             </Card>
         </>
     );
