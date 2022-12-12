@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Space, Table, Tag, Modal} from 'antd'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef} from "react";
@@ -24,6 +24,7 @@ function Article() {
 
     //1.获取文章频道列表数据
     const dispatch = useDispatch()
+    const history = useHistory()
     const {channels, list, total, page, pageSize} = useSelector(state => state.article)
     useEffect(() => {
         dispatch(getChannelAction())
@@ -110,7 +111,9 @@ function Article() {
                 return (
                     <Space size="middle">
                         {/*修改文章*/}
-                        <Button type="primary" shape="circle" icon={<EditOutlined/>}/>
+                        <Button onClick={() => {
+                            history.push(`/home/publish/${data.id}`)
+                        }} type="primary" shape="circle" icon={<EditOutlined/>}/>
                         {/*删除文章*/}
                         <Button
                             type="primary"
