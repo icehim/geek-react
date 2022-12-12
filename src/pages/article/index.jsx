@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom'
 import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Space, Table, Tag} from 'antd'
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 import {getArticleAction, getChannelAction} from "@/store/actions/article";
 import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
 import img404 from '@/assets/error.png'
@@ -128,6 +128,9 @@ function Article() {
      * @param channel_id
      * @param date
      */
+        // let filters = {}
+        //使用useRef记录过滤条件
+    const filters = useRef({})
     const onFilter = ({status, channel_id, date}) => {
         console.log(status, channel_id, date)
         //组装过滤列表需要的参数
@@ -143,6 +146,9 @@ function Article() {
             //结束时间
             params.end_pubdate = date[1].format('YYYY-MM-DD HH:mm:ss')
         }
+        //存储过滤条件params？
+        // filters = params
+        filters.current = params
         dispatch(getArticleAction(params))
     }
 
@@ -155,7 +161,10 @@ function Article() {
     const onPageChange = (page, pageSize) => {
         const params = {
             page,
-            per_page: pageSize
+            per_page: pageSize,
+            //加上过滤条件数据
+            ...filters.current
+
         }
         //根据最新分页数据刷新列表
         dispatch(getArticleAction(params))

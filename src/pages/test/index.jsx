@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 //普通写法
 // import './index.module.scss'
 // 样式模块发写法(推荐)=>style对象，包含新生成的全局唯一的类名(文件名+类名+hash值)
@@ -8,8 +8,34 @@ import Child from "@/pages/test/components/child";
 //react样式冲突:同名样式
 // 总结:样式会互相覆盖(子组件导入和父组件样式导入的顺序有关=》后导入的会覆盖先导入的 )
 function Test() {
+    console.log('默认或者状态变化了，重新执行一次')
+    /*
+    * 使用useRef存储数据，而且不会引起函数组件重新执行
+    * */
+    const countRef = useRef(0)
+    console.log(countRef)
+    const [count, setCount] = useState(0)
+    const add = () => {
+        // 存储count值
+        countRef.current = count
+        setCount(count + 1)
+    }
+    const getCount = () => {
+        console.log(countRef.current)
+    }
     return (
         <div>
+            <ul>
+                <li>
+                    {count}
+                </li>
+                <li>
+                    <button onClick={add}>add</button>
+                </li>
+                <li>
+                    <button onClick={getCount}>获取useRef寸的值</button>
+                </li>
+            </ul>
             <h2 className={style.red}>
                 Test
             </h2>
