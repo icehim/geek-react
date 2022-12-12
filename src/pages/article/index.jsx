@@ -1,9 +1,9 @@
 import {Link} from 'react-router-dom'
-import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Space, Table, Tag} from 'antd'
+import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Space, Table, Tag, Modal} from 'antd'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef} from "react";
 import {getArticleAction, getChannelAction} from "@/store/actions/article";
-import {EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import {EditOutlined, DeleteOutlined, WarningOutlined} from "@ant-design/icons";
 import img404 from '@/assets/error.png'
 // import 'moment/locale/zh-cn'
 // import dayjs from 'dayjs'
@@ -52,6 +52,19 @@ function Article() {
     // ];
     // table列表数据源(从后台获取)
 
+    //删除文章
+    /**
+     *
+     * @param article 文章数据
+     */
+    const delArticle = (article) => {
+        Modal.confirm({
+            title: '提示', content: `确认删除:【${article.title}】吗?`, icon: <WarningOutlined/>, onOk() {
+                console.log('确定删除')
+            }
+        })
+    }
+    //table表格列
     const columns = [
         {
             title: '封面',
@@ -94,11 +107,14 @@ function Article() {
             render: data => {
                 return (
                     <Space size="middle">
+                        {/*修改文章*/}
                         <Button type="primary" shape="circle" icon={<EditOutlined/>}/>
+                        {/*删除文章*/}
                         <Button
                             type="primary"
                             danger
                             shape="circle"
+                            onClick={() => delArticle(data)}
                             icon={<DeleteOutlined/>}
                         />
                     </Space>
