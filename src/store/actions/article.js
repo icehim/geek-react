@@ -25,3 +25,22 @@ export const getArticleAction = (payload) => {
 
     }
 }
+
+//删除文章
+/**
+ *
+ * @param id    文章ID
+ * @param filters   过滤条件
+ * @returns {(function(*): Promise<void>)|*}
+ */
+export const delArticleAction = (id, filters) => {
+    return async (dispatch) => {
+        /*
+        * 1.调用接口删除文章(数据库)
+        * 2.重新获取文章列表数据
+        * */
+        await request.delete(`/v1_0/mp/articles/${id}`)
+        //怎么刷新文章列表数据？重新分发获取文章列表数据action
+        dispatch(getArticleAction(filters))
+    }
+}

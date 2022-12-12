@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom'
 import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Space, Table, Tag, Modal} from 'antd'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef} from "react";
-import {getArticleAction, getChannelAction} from "@/store/actions/article";
+import {delArticleAction, getArticleAction, getChannelAction} from "@/store/actions/article";
 import {EditOutlined, DeleteOutlined, WarningOutlined} from "@ant-design/icons";
 import img404 from '@/assets/error.png'
 // import 'moment/locale/zh-cn'
@@ -59,8 +59,10 @@ function Article() {
      */
     const delArticle = (article) => {
         Modal.confirm({
-            title: '提示', content: `确认删除:【${article.title}】吗?`, icon: <WarningOutlined/>, onOk() {
-                console.log('确定删除')
+            title: '提示', content: `确认删除:【${article.title}】吗?`, icon: <WarningOutlined/>,
+            onOk() {
+                //需要传递:1.文章id(删除文章接口需要) 2.过滤条件数据(刷新列表重新获取列表需要)
+                dispatch(delArticleAction(article.id, filters.current))
             }
         })
     }
