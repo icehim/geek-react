@@ -12,6 +12,9 @@ import {
 import {PlusOutlined} from '@ant-design/icons'
 import {Link} from 'react-router-dom'
 import styles from './index.module.scss'
+//导入富文本编辑器组件和样式
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css'
 
 const {Option} = Select
 
@@ -78,7 +81,8 @@ const Publish = () => {
                         name="content"
                         rules={[{required: true, message: '请输入文章内容'}]}
                     >
-                        {/*富文本呢编辑器*/}
+                        {/*富文本呢编辑器=>需要给默认值*/}
+                        <ReactQuill/>
                     </Form.Item>
                     <Form.Item wrapperCol={{offset: 4}}>
                         <Space>
