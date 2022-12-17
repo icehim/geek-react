@@ -1,0 +1,14 @@
+.root {
+  position: relative;
+
+  //全局样式
+  :global {
+    .ant-upload-list {
+      .ant-upload-list-picture-card-container,
+      .ant-upload-select {
+        width: 146px;
+        height: 146px;
+      }
+    }
+  }
+}
