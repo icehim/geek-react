@@ -1,16 +1,16 @@
 import {Link, useHistory} from 'react-router-dom'
-import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Space, Table, Tag, Modal} from 'antd'
+import {Card, Breadcrumb, Form, Button, Radio, DatePicker, Space, Table, Tag, Modal} from 'antd'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useRef} from "react";
-import {delArticleAction, getArticleAction, getChannelAction} from "@/store/actions/article";
+import {delArticleAction, getArticleAction} from "@/store/actions/article";
 import {EditOutlined, DeleteOutlined, WarningOutlined} from "@ant-design/icons";
 import img404 from '@/assets/error.png'
+import Channel from "@/components/channel";
 // import 'moment/locale/zh-cn'
 // import dayjs from 'dayjs'
 // import locale from "antd/es/date-picker/locale/zh_CN";
 // dayjs.locale('zh-cn');
 
-const {Option} = Select
 const {RangePicker} = DatePicker
 // 优化文章状态的处理(不变的)=》映射关系
 const articleStatus = {
@@ -25,9 +25,9 @@ function Article() {
     //1.获取文章频道列表数据
     const dispatch = useDispatch()
     const history = useHistory()
-    const {channels, list, total, page, pageSize} = useSelector(state => state.article)
+    const {list, total, page, pageSize} = useSelector(state => state.article)
     useEffect(() => {
-        dispatch(getChannelAction())
+        // dispatch(getChannelAction())
         //2.获取文章列表数据=》默认第一次调用，不需要顾虑参数
         dispatch(getArticleAction({}))
     }, [dispatch])
@@ -216,17 +216,8 @@ function Article() {
                     </Form.Item>
 
                     <Form.Item label="频道" name="channel_id">
-                        <Select
-                            placeholder="请选择文章频道"
-                            style={{width: 140}}
-                        >
-                            {/*value属性是选择的时候存到表单中的值*/}
-                            {
-                                channels.map(item => (
-                                    <Option key={item.id} value={item.id}>{item.name}</Option>
-                                ))
-                            }
-                        </Select>
+                        {/*文章频道选择*/}
+                        <Channel/>
                     </Form.Item>
 
                     <Form.Item label="日期" name="date">
