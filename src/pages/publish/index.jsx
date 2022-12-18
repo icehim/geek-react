@@ -6,7 +6,7 @@ import {
     Radio,
     Input,
     Upload,
-    Space,
+    Space, message,
 } from 'antd'
 import {PlusOutlined} from '@ant-design/icons'
 import {Link} from 'react-router-dom'
@@ -60,6 +60,26 @@ const Publish = () => {
             setFileList(fileListRef.current)
         }
     }
+
+    //4.发布文章=》获取表单数据
+    const onFinish = (formData) => {
+        console.log('校验通过', formData)
+        /*
+        * 1.校验文章封面图片
+        * 2.准备发布文章后台需要的数据
+        *
+        * */
+        const {type, ...rest} = formData
+        if (formData.type !== fileList.length) {
+            return message.error('封面数量和上传图片数量不一致!')
+        }
+        //组装后台需要的数据
+        const data = {
+            ...rest,
+            //文章封面图片=>images:['url1','url2',...]
+            cover: {type, images: fileList.map(item => item.url)}
+        }
+    }
     return (
         <div className={styles.root}>
             <Card
@@ -73,6 +93,7 @@ const Publish = () => {
                 }
             >
                 <Form
+                    onFinish={onFinish}
                     // 表单左侧文字控制宽度
                     labelCol={{span: 4}}
                     //表单项宽度控制
