@@ -93,14 +93,19 @@ const Publish = () => {
             //文章封面图片=>images:['url1','url2',...]
             cover: {type, images: fileList.map(item => item.url)}
         }
+        //判断如果是编辑状态，把文章ID存到data上
+        if (isEdit) {
+            data.id = params.id
+        }
         /*
         * 发布文章使用dispatch还是直接发请求?
         * 1.在页面直接发请求(后台请求封装到api目录)
         * 2.在页面使用dispatch(结合redux的方式)
         * */
         try {
-            await dispatch(addArticleAction(data, isDraft))
-            message.success(!isDraft ? '发布成功!' : '存储成功!')
+            await dispatch(addArticleAction(data, isDraft, isEdit))
+            const editTxt = isEdit ? '编辑' : '发布'
+            message.success(!isDraft ? `${editTxt}成功!` : '存储成功!')
             history.push('/home/article')
 
         } catch (error) {
@@ -148,7 +153,6 @@ const Publish = () => {
             fileListRef.current = imgList
             //最大可上传图片数量
             setMaxCount(type)
-
         }
         getDetail()
     }, [isEdit, params.id, form])
