@@ -68,7 +68,9 @@ const Layouts = () => {
                     <Menu
                         mode="inline"
                         theme="dark"
-                        defaultSelectedKeys={[currSelected]}
+                        //控制选中的菜单,值是Menu.Item上的key值
+                        // defaultSelectedKeys={[currSelected]}
+                        selectedKeys={[currSelected]}
                         style={{height: '100%', borderRight: 0}}
                     >
                         <Menu.Item icon={<HomeOutlined/>} key="/home">
