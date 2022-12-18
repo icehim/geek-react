@@ -66,8 +66,14 @@ const Publish = () => {
     }
 
     //4.发布文章=》获取表单数据
-    const onFinish = async (formData) => {
-        console.log('校验通过', formData)
+    //公共方法:发布文章(1.正式发布 2.存为草稿)
+    /**
+     *
+     * @param formData  表单数据
+     * @param isDraft   是否是草稿状态:true 草稿 | false 正式文章
+     * @returns {MessageType}
+     */
+    const publishArticle = async (formData, isDraft) => {
         /*
         * 1.校验文章封面图片
         * 2.准备发布文章后台需要的数据
@@ -89,8 +95,8 @@ const Publish = () => {
         * 2.在页面使用dispatch(结合redux的方式)
         * */
         try {
-            await dispatch(addArticleAction(data))
-            message.success('发布成功')
+            await dispatch(addArticleAction(data, isDraft))
+            message.success(!isDraft ? '发布成功!' : '存储成功!')
             history.push('/home/article')
 
         } catch (error) {
@@ -104,13 +110,19 @@ const Publish = () => {
         console.log('表单控制实例', form)
         //通过form的validates校验表单
         try {
-            const formDate = await form.validateFields()
+            const formData = await form.validateFields()
             //校验通过走到这里
-            console.log('获取表单值', formDate)
+            publishArticle(formData, true)
+
         } catch (e) {
             //校验不通过走到这里
             console.log(e)
         }
+    }
+    const onFinish = async (formData) => {
+        console.log('校验通过', formData)
+        //发布文章
+        publishArticle(formData, false)
     }
 
     return (

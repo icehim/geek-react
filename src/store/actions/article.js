@@ -48,11 +48,12 @@ export const delArticleAction = (id, filters) => {
 /**
  *
  * @param data 新增文章参数
+ * @param isDraft 是否是草稿状态:true 草稿 | false 正式文章
  * @returns {(function(): Promise<*>)|*}
  */
-export const addArticleAction = (data) => {
+export const addArticleAction = (data, isDraft) => {
     return async () => {
         //说明:后期区分是否是草稿：1.发布文章(不是草稿) 2.存入草稿
-        await request.post(`/v1_0/mp/articles?draft=false`, data)
+        await request.post(`/v1_0/mp/articles?draft=${isDraft}`, data)
     }
 }
