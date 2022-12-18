@@ -9,13 +9,15 @@ import {
     Space, message,
 } from 'antd'
 import {PlusOutlined} from '@ant-design/icons'
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import styles from './index.module.scss'
 //导入富文本编辑器组件和样式
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'
 import {useRef, useState} from "react";
 import Channel from "@/components/channel";
+import {useDispatch} from "react-redux";
+import {addArticleAction} from "@/store/actions/article";
 
 
 const Publish = () => {
@@ -23,6 +25,8 @@ const Publish = () => {
     //1.上传文章封面的实现
     //已上传图片的列表:[{url:'',},{url:''},...]
     const [fileList, setFileList] = useState([])
+    const dispatch = useDispatch()
+    const history = useHistory()
     //备份fileList=》动态切换单图或多图使用
     const fileListRef = useRef([])
 
@@ -62,7 +66,7 @@ const Publish = () => {
     }
 
     //4.发布文章=》获取表单数据
-    const onFinish = (formData) => {
+    const onFinish = async (formData) => {
         console.log('校验通过', formData)
         /*
         * 1.校验文章封面图片
@@ -79,7 +83,36 @@ const Publish = () => {
             //文章封面图片=>images:['url1','url2',...]
             cover: {type, images: fileList.map(item => item.url)}
         }
+        /*
+        * 发布文章使用dispatch还是直接发请求?
+        * 1.在页面直接发请求(后台请求封装到api目录)
+        * 2.在页面使用dispatch(结合redux的方式)
+        * */
+        try {
+            await dispatch(addArticleAction(data))
+            message.success('发布成功')
+            history.push('/home/article')
+
+        } catch (error) {
+            console.log(error)
+        }
     }
+    //5.存入草稿
+    // 获取表单实例
+    const [form] = Form.useForm()
+    const saveDraft = async () => {
+        console.log('表单控制实例', form)
+        //通过form的validates校验表单
+        try {
+            const formDate = await form.validateFields()
+            //校验通过走到这里
+            console.log('获取表单值', formDate)
+        } catch (e) {
+            //校验不通过走到这里
+            console.log(e)
+        }
+    }
+
     return (
         <div className={styles.root}>
             <Card
@@ -93,6 +126,7 @@ const Publish = () => {
                 }
             >
                 <Form
+                    form={form}
                     onFinish={onFinish}
                     // 表单左侧文字控制宽度
                     labelCol={{span: 4}}
@@ -169,7 +203,7 @@ const Publish = () => {
                             <Button size="large" type="primary" htmlType="submit">
                                 发布文章
                             </Button>
-                            <Button size="large">存入草稿</Button>
+                            <Button onClick={saveDraft} size="large">存入草稿</Button>
                         </Space>
                     </Form.Item>
                 </Form>

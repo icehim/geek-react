@@ -44,3 +44,15 @@ export const delArticleAction = (id, filters) => {
         dispatch(getArticleAction(filters))
     }
 }
+
+/**
+ *
+ * @param data 新增文章参数
+ * @returns {(function(): Promise<*>)|*}
+ */
+export const addArticleAction = (data) => {
+    return async () => {
+        //说明:后期区分是否是草稿：1.发布文章(不是草稿) 2.存入草稿
+        await request.post(`/v1_0/mp/articles?draft=false`, data)
+    }
+}
