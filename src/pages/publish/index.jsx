@@ -9,19 +9,24 @@ import {
     Space, message,
 } from 'antd'
 import {PlusOutlined} from '@ant-design/icons'
-import {Link, useHistory} from 'react-router-dom'
+import {Link, useHistory, useParams} from 'react-router-dom'
 import styles from './index.module.scss'
 //导入富文本编辑器组件和样式
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Channel from "@/components/channel";
 import {useDispatch} from "react-redux";
 import {addArticleAction} from "@/store/actions/article";
+import request from "@/utils/request";
 
 
 const Publish = () => {
 
+    //获取文章Id
+    const params = useParams()
+    //isEdit：1.true 编辑文章状态 2.false 发布文章状态
+    const isEdit = !!params.id
     //1.上传文章封面的实现
     //已上传图片的列表:[{url:'',},{url:''},...]
     const [fileList, setFileList] = useState([])
@@ -71,7 +76,6 @@ const Publish = () => {
      *
      * @param formData  表单数据
      * @param isDraft   是否是草稿状态:true 草稿 | false 正式文章
-     * @returns {MessageType}
      */
     const publishArticle = async (formData, isDraft) => {
         /*
@@ -119,7 +123,37 @@ const Publish = () => {
             console.log(e)
         }
     }
-    const onFinish = async (formData) => {
+
+    //6.编辑状态=>根据文章ID获取文章数据,进行回填
+    useEffect(() => {
+        /*
+        * 1.判断是否是编辑状态
+        * 2.如果是进行=》根据文章ID获取文章数据,进行回填
+        *
+        * */
+        const getDetail = async () => {
+            if (!isEdit) return
+            //是编辑状态
+            const {data} = await request.get(`/v1_0/mp/articles/${params.id}`)
+            // 处理后台返回的数据，进行数据回填
+            const {title, content, channel_id, cover: {type, images}} = data
+            //组装表单回填需要的数据
+            const formData = {type, title, content, channel_id,}
+            //1.表单数据回填
+            form.setFieldsValue(formData)
+            //2.回填文章的封面图片列表
+            const imgList = images.map(item => ({url: item}))
+            setFileList(imgList)
+            //备份图片列表
+            fileListRef.current = imgList
+            //最大可上传图片数量
+            setMaxCount(type)
+
+        }
+        getDetail()
+    }, [isEdit, params.id, form])
+
+    const onFinish = (formData) => {
         console.log('校验通过', formData)
         //发布文章
         publishArticle(formData, false)
@@ -133,7 +167,7 @@ const Publish = () => {
                         <Breadcrumb.Item>
                             <Link to="/home">首页</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>发布文章</Breadcrumb.Item>
+                        <Breadcrumb.Item>{!isEdit ? '发布文章' : '编辑文章'}</Breadcrumb.Item>
                     </Breadcrumb>
                 }
             >
@@ -213,7 +247,7 @@ const Publish = () => {
                     <Form.Item wrapperCol={{offset: 4}}>
                         <Space>
                             <Button size="large" type="primary" htmlType="submit">
-                                发布文章
+                                {!isEdit ? '发布文章' : '编辑文章'}
                             </Button>
                             <Button onClick={saveDraft} size="large">存入草稿</Button>
                         </Space>
