@@ -7,7 +7,6 @@ import {
     Input,
     Upload,
     Space,
-    Select
 } from 'antd'
 import {PlusOutlined} from '@ant-design/icons'
 import {Link} from 'react-router-dom'
@@ -15,10 +14,32 @@ import styles from './index.module.scss'
 //导入富文本编辑器组件和样式
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'
+import {useState} from "react";
+import Channel from "@/components/channel";
 
-const {Option} = Select
 
 const Publish = () => {
+
+    //1.上传文章封面的实现
+    //已上传图片的列表:[{url:'',},{url:''},...]
+    const [fileList, setFileList] = useState([])
+    //处理上传文件列表
+    const onUploadChange = (data) => {
+        const _fileList = data.fileList.map(file => {
+            //1.从本地选择新上传的图片
+            //file.response 上传成功之后，后台返回的响应数据
+            if (file.response) {
+                return {
+                    url: file.response.data.url
+                }
+            }
+            //2.操作删除本地已上传图片
+            return file
+        })
+        //存储上传图片文件列表
+        setFileList(_fileList)
+    }
+
     return (
         <div className={styles.root}>
             <Card
@@ -51,9 +72,10 @@ const Publish = () => {
                         name="channel_id"
                         rules={[{required: true, message: '请选择文章频道'}]}
                     >
-                        <Select placeholder="请选择文章频道" style={{width: 400}}>
-                            <Option value={0}>推荐</Option>
-                        </Select>
+                        {/*<Select placeholder="请选择文章频道" style={{width: 400}}>*/}
+                        {/*    <Option value={0}>推荐</Option>*/}
+                        {/*</Select>*/}
+                        <Channel/>
                     </Form.Item>
 
                     <Form.Item label="封面">
@@ -65,11 +87,25 @@ const Publish = () => {
                                 {/* <Radio value={-1}>自动</Radio> */}
                             </Radio.Group>
                         </Form.Item>
+                        {/* Upload 组件说明：*/}
                         <Upload
-                            name="image"
-                            listType="picture-card"
                             className="avatar-uploader"
+                            // 发到后台的文件参数名
+                            // 必须指定，根据接口文档的说明，需要设置为 image
+                            name="image"
+                            // 上传组件展示方式
+                            listType="picture-card"
+                            // 展示已上传图片列表
                             showUploadList
+                            // 接口地址
+                            // 注意：Upload 再上传图片时，默认不会执行 axios 的请求，所以，此处需要手动设置完整接口地址
+                            action="http://geek.itheima.net/v1_0/upload"
+                            // 多选
+                            multiple
+                            // 已经上传的文件列表，设置该属性后组件变为 受控
+                            fileList={fileList}
+                            // 上传文件改变/本地已上传文件修改的时候的回调
+                            onChange={onUploadChange}
                         >
                             <div style={{marginTop: 8}}>
                                 <PlusOutlined/>
