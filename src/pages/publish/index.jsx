@@ -14,7 +14,7 @@ import styles from './index.module.scss'
 //导入富文本编辑器组件和样式
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'
-import {useState} from "react";
+import {useRef, useState} from "react";
 import Channel from "@/components/channel";
 
 
@@ -23,6 +23,9 @@ const Publish = () => {
     //1.上传文章封面的实现
     //已上传图片的列表:[{url:'',},{url:''},...]
     const [fileList, setFileList] = useState([])
+    //备份fileList=》动态切换单图或多图使用
+    const fileListRef = useRef([])
+
     //处理上传文件列表
     const onUploadChange = (data) => {
         const _fileList = data.fileList.map(file => {
@@ -36,6 +39,8 @@ const Publish = () => {
             //2.操作删除本地已上传图片
             return file
         })
+        // 备份
+        fileListRef.current = _fileList
         //存储上传图片文件列表
         setFileList(_fileList)
     }
@@ -43,7 +48,17 @@ const Publish = () => {
     //2.控制图片封面上传的数量
     const [maxCount, setMaxCount] = useState(1)
     const changeType = (e) => {
-        setMaxCount(e.target.value)
+        const count = e.target.value
+        setMaxCount(count)
+        //3.处理单图和多图的动态切换
+        if (count === 1) {
+            //从备份数据中获取第一张
+            const firstImg = fileListRef.current[0]
+            //1.可能一张图片都没有上传 2.可能上传1~3
+            setFileList(!firstImg ? [] : [firstImg])
+        } else if (count === 3) {
+            setFileList(fileListRef.current)
+        }
     }
     return (
         <div className={styles.root}>
