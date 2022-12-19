@@ -3,18 +3,25 @@ import {HomeOutlined, DiffOutlined, EditOutlined, LogoutOutlined} from '@ant-des
 // 导入组件样式
 import styles from './index.module.scss'
 //导入三个子路由页面
-import Home from "@/pages/home";
-import Article from "@/pages/article";
-import Publish from "@/pages/publish";
+// import Home from "@/pages/home";
+// import Article from "@/pages/article";
+// import Publish from "@/pages/publish";
+
+
 import {Route, Link, useLocation, useHistory, Switch} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+import {lazy, useEffect} from "react";
 import {getUserAction} from "@/store/actions/user";
 import {logoutAction} from "@/store/actions/login";
-import NotFound from "@/pages/404";
-
+// import NotFound from "@/pages/404";
 //结构Layout组件上的静态属性=》函数组件
 const {Header, Sider} = Layout
+
+//路由的懒加载
+const Home = lazy(() => import( "@/pages/home"))
+const Article = lazy(() => import( "@/pages/article"))
+const Publish = lazy(() => import( "@/pages/publish"))
+const NotFound = lazy(() => import( "@/pages/404"))
 
 const Layouts = () => {
     /*
