@@ -17,6 +17,13 @@ import zhCN from 'antd/locale/zh_CN';
 
 console.log(process.env)
 
+if (process.env.NODE_ENV === 'production') {
+    //开发环境重写log,不执行
+    console.log = console.warn = () => {
+    }
+}
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
