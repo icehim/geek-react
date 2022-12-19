@@ -46,6 +46,10 @@ const Layouts = () => {
         history.replace('/login')
     }
 
+    //每次路由切换页面，执行滚动回顶
+
+    document.querySelector('.scrollBox') && (document.querySelector('.scrollBox').scrollTop = 0)
+
     return (
         <Layout className={styles.root}>
             {/*顶部通栏*/}
@@ -85,7 +89,7 @@ const Layouts = () => {
                     </Menu>
                 </Sider>
                 {/*右侧：内容*/}
-                <Layout className="layout-content" style={{padding: 20}}>
+                <Layout className="scrollBox" style={{padding: 20, overflowY: 'auto'}}>
                     {/*配置子路由*/}
                     <Route exact path='/home' component={Home}/>
                     <Route path='/home/article' component={Article}/>
