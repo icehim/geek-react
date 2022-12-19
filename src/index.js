@@ -15,6 +15,8 @@ import {ConfigProvider} from "antd";
 import 'dayjs/locale/zh-cn';
 import zhCN from 'antd/locale/zh_CN';
 
+console.log(process.env)
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
