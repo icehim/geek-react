@@ -90,7 +90,7 @@ const Layouts = () => {
                     <Route exact path='/home' component={Home}/>
                     <Route path='/home/article' component={Article}/>
                     {/*1.发布文章(不带ID参数) 2.修改文章(带ID参数)=》:id?   '?'：意思是参数是可选的*/}
-                    <Route path='/home/publish/:id?' component={Publish}/>
+                    <Route key={Date.now()} path='/home/publish/:id?' component={Publish}/>
                 </Layout>
             </Layout>
         </Layout>

@@ -6,7 +6,7 @@ import {
     Radio,
     Input,
     Upload,
-    Space, message,
+    Space, message, Spin,
 } from 'antd'
 import {PlusOutlined} from '@ant-design/icons'
 import {Link, useHistory, useParams} from 'react-router-dom'
@@ -19,6 +19,9 @@ import Channel from "@/components/channel";
 import {useDispatch} from "react-redux";
 import {addArticleAction} from "@/store/actions/article";
 import request from "@/utils/request";
+
+// 编辑状态下，再次点击菜单，表单数据没有清空=>组件缓存:1.组件key 2.手动清空
+// 编辑装天下,数据回填的时候=>加入loading效果
 
 
 const Publish = () => {
@@ -130,6 +133,8 @@ const Publish = () => {
     }
 
     //6.编辑状态=>根据文章ID获取文章数据,进行回填
+    // 添加loading效果
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
         /*
         * 1.判断是否是编辑状态
@@ -137,7 +142,7 @@ const Publish = () => {
         *
         * */
         const getDetail = async () => {
-            if (!isEdit) return
+            if (!isEdit) return setLoading(false)
             //是编辑状态
             const {data} = await request.get(`/v1_0/mp/articles/${params.id}`)
             // 处理后台返回的数据，进行数据回填
@@ -153,6 +158,8 @@ const Publish = () => {
             fileListRef.current = imgList
             //最大可上传图片数量
             setMaxCount(type)
+            //关闭loading遮罩
+            setLoading(false)
         }
         getDetail()
     }, [isEdit, params.id, form])
@@ -165,99 +172,101 @@ const Publish = () => {
 
     return (
         <div className={styles.root}>
-            <Card
-                title={
-                    <Breadcrumb separator=">">
-                        <Breadcrumb.Item>
-                            <Link to="/home">首页</Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>{!isEdit ? '发布文章' : '编辑文章'}</Breadcrumb.Item>
-                    </Breadcrumb>
-                }
-            >
-                <Form
-                    form={form}
-                    onFinish={onFinish}
-                    // 表单左侧文字控制宽度
-                    labelCol={{span: 4}}
-                    //表单项宽度控制
-                    wrapperCol={{span: 16}}
-                    //表单化的默认值
-                    initialValues={{type: 1}}
+            <Spin tip='正在加载中...' spinning={loading}>
+                <Card
+                    title={
+                        <Breadcrumb separator=">">
+                            <Breadcrumb.Item>
+                                <Link to="/home">首页</Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>{!isEdit ? '发布文章' : '编辑文章'}</Breadcrumb.Item>
+                        </Breadcrumb>
+                    }
                 >
-                    <Form.Item
-                        label="标题"
-                        name="title"
-                        rules={[{required: true, message: '请输入文章标题'}]}
+                    <Form
+                        form={form}
+                        onFinish={onFinish}
+                        // 表单左侧文字控制宽度
+                        labelCol={{span: 4}}
+                        //表单项宽度控制
+                        wrapperCol={{span: 16}}
+                        //表单化的默认值
+                        initialValues={{type: 1}}
                     >
-                        <Input placeholder="请输入文章标题" style={{width: 400}}/>
-                    </Form.Item>
-                    <Form.Item
-                        label="频道"
-                        name="channel_id"
-                        rules={[{required: true, message: '请选择文章频道'}]}
-                    >
-                        {/*<Select placeholder="请选择文章频道" style={{width: 400}}>*/}
-                        {/*    <Option value={0}>推荐</Option>*/}
-                        {/*</Select>*/}
-                        <Channel/>
-                    </Form.Item>
-
-                    <Form.Item label="封面">
-                        <Form.Item name="type">
-                            <Radio.Group onChange={changeType}>
-                                <Radio value={1}>单图</Radio>
-                                <Radio value={3}>三图</Radio>
-                                <Radio value={0}>无图</Radio>
-                                {/* <Radio value={-1}>自动</Radio> */}
-                            </Radio.Group>
+                        <Form.Item
+                            label="标题"
+                            name="title"
+                            rules={[{required: true, message: '请输入文章标题'}]}
+                        >
+                            <Input placeholder="请输入文章标题" style={{width: 400}}/>
                         </Form.Item>
-                        {/* Upload 组件说明：*/}
-                        {
-                            maxCount > 0 && <Upload
-                                maxCount={maxCount}// 控制上传图片的数量
-                                multiple={maxCount > 1} // 多选
-                                className="avatar-uploader"
-                                // 发到后台的文件参数名
-                                // 必须指定，根据接口文档的说明，需要设置为 image
-                                name="image"
-                                // 上传组件展示方式
-                                listType="picture-card"
-                                // 展示已上传图片列表
-                                showUploadList
-                                // 接口地址
-                                // 注意：Upload 再上传图片时，默认不会执行 axios 的请求，所以，此处需要手动设置完整接口地址
-                                action="http://geek.itheima.net/v1_0/upload"
+                        <Form.Item
+                            label="频道"
+                            name="channel_id"
+                            rules={[{required: true, message: '请选择文章频道'}]}
+                        >
+                            {/*<Select placeholder="请选择文章频道" style={{width: 400}}>*/}
+                            {/*    <Option value={0}>推荐</Option>*/}
+                            {/*</Select>*/}
+                            <Channel/>
+                        </Form.Item>
 
-                                // 已经上传的文件列表，设置该属性后组件变为 受控
-                                fileList={fileList}
-                                // 上传文件改变/本地已上传文件修改的时候的回调
-                                onChange={onUploadChange}
-                            >
-                                <div style={{marginTop: 8}}>
-                                    <PlusOutlined/>
-                                </div>
-                            </Upload>
-                        }
-                    </Form.Item>
-                    <Form.Item
-                        label="内容"
-                        name="content"
-                        rules={[{required: true, message: '请输入文章内容'}]}
-                    >
-                        {/*富文本呢编辑器=>需要给默认值*/}
-                        <ReactQuill/>
-                    </Form.Item>
-                    <Form.Item wrapperCol={{offset: 4}}>
-                        <Space>
-                            <Button size="large" type="primary" htmlType="submit">
-                                {!isEdit ? '发布文章' : '编辑文章'}
-                            </Button>
-                            <Button onClick={saveDraft} size="large">存入草稿</Button>
-                        </Space>
-                    </Form.Item>
-                </Form>
-            </Card>
+                        <Form.Item label="封面">
+                            <Form.Item name="type">
+                                <Radio.Group onChange={changeType}>
+                                    <Radio value={1}>单图</Radio>
+                                    <Radio value={3}>三图</Radio>
+                                    <Radio value={0}>无图</Radio>
+                                    {/* <Radio value={-1}>自动</Radio> */}
+                                </Radio.Group>
+                            </Form.Item>
+                            {/* Upload 组件说明：*/}
+                            {
+                                maxCount > 0 && <Upload
+                                    maxCount={maxCount}// 控制上传图片的数量
+                                    multiple={maxCount > 1} // 多选
+                                    className="avatar-uploader"
+                                    // 发到后台的文件参数名
+                                    // 必须指定，根据接口文档的说明，需要设置为 image
+                                    name="image"
+                                    // 上传组件展示方式
+                                    listType="picture-card"
+                                    // 展示已上传图片列表
+                                    showUploadList
+                                    // 接口地址
+                                    // 注意：Upload 再上传图片时，默认不会执行 axios 的请求，所以，此处需要手动设置完整接口地址
+                                    action="http://geek.itheima.net/v1_0/upload"
+
+                                    // 已经上传的文件列表，设置该属性后组件变为 受控
+                                    fileList={fileList}
+                                    // 上传文件改变/本地已上传文件修改的时候的回调
+                                    onChange={onUploadChange}
+                                >
+                                    <div style={{marginTop: 8}}>
+                                        <PlusOutlined/>
+                                    </div>
+                                </Upload>
+                            }
+                        </Form.Item>
+                        <Form.Item
+                            label="内容"
+                            name="content"
+                            rules={[{required: true, message: '请输入文章内容'}]}
+                        >
+                            {/*富文本呢编辑器=>需要给默认值*/}
+                            <ReactQuill/>
+                        </Form.Item>
+                        <Form.Item wrapperCol={{offset: 4}}>
+                            <Space>
+                                <Button size="large" type="primary" htmlType="submit">
+                                    {!isEdit ? '发布文章' : '编辑文章'}
+                                </Button>
+                                <Button onClick={saveDraft} size="large">存入草稿</Button>
+                            </Space>
+                        </Form.Item>
+                    </Form>
+                </Card>
+            </Spin>
         </div>
     )
 }
