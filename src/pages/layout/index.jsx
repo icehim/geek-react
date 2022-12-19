@@ -6,11 +6,12 @@ import styles from './index.module.scss'
 import Home from "@/pages/home";
 import Article from "@/pages/article";
 import Publish from "@/pages/publish";
-import {Route, Link, useLocation, useHistory} from "react-router-dom";
+import {Route, Link, useLocation, useHistory, Switch} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {getUserAction} from "@/store/actions/user";
 import {logoutAction} from "@/store/actions/login";
+import NotFound from "@/pages/404";
 
 //结构Layout组件上的静态属性=》函数组件
 const {Header, Sider} = Layout
@@ -91,10 +92,13 @@ const Layouts = () => {
                 {/*右侧：内容*/}
                 <Layout className="scrollBox" style={{padding: 20, overflowY: 'auto'}}>
                     {/*配置子路由*/}
-                    <Route exact path='/home' component={Home}/>
-                    <Route path='/home/article' component={Article}/>
-                    {/*1.发布文章(不带ID参数) 2.修改文章(带ID参数)=》:id?   '?'：意思是参数是可选的*/}
-                    <Route key={Date.now()} path='/home/publish/:id?' component={Publish}/>
+                    <Switch>
+                        <Route exact path='/home' component={Home}/>
+                        <Route path='/home/article' component={Article}/>
+                        {/*1.发布文章(不带ID参数) 2.修改文章(带ID参数)=》:id?   '?'：意思是参数是可选的*/}
+                        <Route key={Date.now()} path='/home/publish/:id?' component={Publish}/>
+                        <Route component={NotFound}/>
+                    </Switch>
                 </Layout>
             </Layout>
         </Layout>
