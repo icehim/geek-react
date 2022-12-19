@@ -6,7 +6,8 @@ import customHistory from "@/utils/history";
 //创建新axios实例
 const request = axios.create({
     //后台请求基础地址
-    baseURL: 'http://geek.itheima.net'
+    // baseURL: 'http://geek.itheima.net'
+    baseURL: process.env.REACT_APP_URL
 })
 //请求拦截器
 request.interceptors.request.use((config) => {
