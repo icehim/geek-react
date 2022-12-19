@@ -1,0 +1,12 @@
+.root {
+  width: 600px;
+  margin: 200px auto;
+  text-align: center;
+  border: 1px solid #fafafa;
+
+  :global {
+    .back {
+      font-size: 18px;
+    }
+  }
+}
