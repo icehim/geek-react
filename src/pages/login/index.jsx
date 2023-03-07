@@ -56,7 +56,7 @@ function Login() {
                 <img className="login-logo" src={logo} alt=""/>
                 {/* 登录表单 initialValues指定表单项目的默认值*/}
                 <Form
-                    initialValues={{mobile: '', code: '', agree: false}}
+                    initialValues={{mobile: '13911111111', code: '246810', agree: false}}
                     validateTrigger={['onBlur', 'onChange']}
                     onFinish={onFinish}
                     autoComplete="off"
@@ -66,7 +66,7 @@ function Login() {
                         1，Form.Item组件上必须加name属性,name属性和后台接口需要的参数名保持一直
                         2.Form.Item组件上加rules属性，添加校验规则
                         3.通过validateTrigger指定校验规则出发的时机:['onBlur','onChange']
-                        说明:在Form组件上加validateTrigger作用域所有表单项，在自表单项的规则单独加的validateTrigger会覆盖Form组件的出发实际
+                        说明:在Form组件上加validateTrigger作用域所有表单项，在自表单项的规则单独加的validateTrigger会覆盖Form组件的触发时机
                     */}
                     <Form.Item
                         name="mobile"
@@ -79,7 +79,7 @@ function Login() {
                             },
                         ]}
                     >
-                        <Input size='large' placeholder='请输入手机号'/>
+                        <Input size='large' placeholder='请输入手机号' />
                     </Form.Item>
 
                     <Form.Item
@@ -87,7 +87,7 @@ function Login() {
                         rules={[{required: true, message: '请输入验证码！'}, {len: 6, message: '请输入6位验证码'}]}
                     >
                         {/*<Input.Password size='large'/>*/}
-                        <Password size='large'/>
+                        <Password size='large' placeholder='请输入验证码' />
                     </Form.Item>
                     <Form.Item name="agree" valuePropName="checked" rules={[{
                         validator: validateAgree
